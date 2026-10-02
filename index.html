@@ -25,6 +25,9 @@
   --warn: #c2410c;
   --warn-strong: #f59e0b;
   --warn-soft: rgba(245, 158, 11, .17);
+  --recv: #0369a1;
+  --recv-strong: #38bdf8;
+  --recv-soft: rgba(56, 189, 248, .17);
   --blob1: #5eead4;
   --blob2: #fda4af;
   --blob3: #a5b4fc;
@@ -41,6 +44,7 @@
     --accent: #2dd4bf; --accent-soft: rgba(45, 212, 191, .15); --on-accent: #042321;
     --in: #34d399; --in-soft: rgba(52, 211, 153, .15); --out: #fb7185; --out-soft: rgba(251, 113, 133, .15);
     --warn: #fbbf24; --warn-strong: #f59e0b; --warn-soft: rgba(251, 191, 36, .16);
+    --recv: #7dd3fc; --recv-strong: #38bdf8; --recv-soft: rgba(56, 189, 248, .15);
     --blob1: #0f766e; --blob2: #9f1239; --blob3: #3730a3; --shadow: 0 8px 30px rgba(0, 0, 0, .35);
     color-scheme: dark;
   }
@@ -51,6 +55,7 @@
   --accent: #2dd4bf; --accent-soft: rgba(45, 212, 191, .15); --on-accent: #042321;
   --in: #34d399; --in-soft: rgba(52, 211, 153, .15); --out: #fb7185; --out-soft: rgba(251, 113, 133, .15);
   --warn: #fbbf24; --warn-strong: #f59e0b; --warn-soft: rgba(251, 191, 36, .16);
+    --recv: #7dd3fc; --recv-strong: #38bdf8; --recv-soft: rgba(56, 189, 248, .15);
   --blob1: #0f766e; --blob2: #9f1239; --blob3: #3730a3; --shadow: 0 8px 30px rgba(0, 0, 0, .35);
   color-scheme: dark;
 }
@@ -102,7 +107,7 @@ header p { margin: 2px 0 0; color: var(--muted); }
 .pend-lines { display: grid; gap: 2px; font-size: .86rem; }
 .pend-lines .num { font-size: 1.05rem; font-weight: 600; }
 .pend-lines .pay { color: var(--out); }
-.pend-lines .rec { color: var(--in); }
+.pend-lines .rec { color: var(--recv); }
 .stat.pend small { color: var(--warn); font-weight: 600; }
 
 .main { display: grid; grid-template-columns: 340px minmax(0, 1fr); gap: 20px; align-items: start; }
@@ -172,6 +177,12 @@ tr.is-pending td { background: var(--warn-soft); }
 tr.is-pending td:first-child { box-shadow: inset 4px 0 0 var(--warn-strong); }
 tr.is-pending .desc::after { content: " · pendente"; color: var(--warn); font-weight: 600; font-size: .8rem; }
 .actions button.pay-btn { background: var(--warn-strong); color: #1c1003; border-color: var(--warn-strong); font-weight: 600; }
+/* Entradas pendentes (a receber) usam azul-céu; o âmbar fica para as saídas a pagar */
+tr.in.is-pending td { background: var(--recv-soft); }
+tr.in.is-pending td:first-child { box-shadow: inset 4px 0 0 var(--recv-strong); }
+tr.in.is-pending .desc::after { content: " · a receber"; color: var(--recv); }
+tr.in .chip.pending { background: var(--recv-strong); color: #04263a; }
+tr.in .actions button.pay-btn { background: var(--recv-strong); color: #04263a; border-color: var(--recv-strong); }
 .actions { white-space: nowrap; text-align: right; }
 .actions button { padding: 4px 8px; font-size: .8rem; }
 .actions button.danger { color: var(--out); }
