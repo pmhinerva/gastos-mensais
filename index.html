@@ -145,6 +145,19 @@ button:disabled { opacity: .6; cursor: progress; }
 table { width: 100%; border-collapse: collapse; font-size: .92rem; }
 th { text-align: left; font-size: .72rem; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); font-weight: 600; padding: 6px 8px; border-bottom: 1px solid var(--line); white-space: nowrap; }
 td { padding: 9px 8px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+th .sort-btn {
+  display: inline-flex; align-items: center; gap: 6px; width: auto;
+  font: inherit; text-transform: inherit; letter-spacing: inherit; color: inherit; font-weight: 600;
+  background: var(--field); border: 1px solid var(--line); border-radius: 8px; padding: 4px 8px;
+}
+th .sort-btn:hover { border-color: var(--accent); color: var(--ink); }
+th .sort-btn .arrow { display: inline-grid; line-height: .55; font-size: .62rem; opacity: .45; }
+th .sort-btn .arrow::before { content: "▲"; }
+th .sort-btn .arrow::after { content: "▼"; }
+th .sort-btn.active { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
+th .sort-btn.active .arrow { opacity: 1; }
+th .sort-btn.active.asc .arrow::after, th .sort-btn.active.desc .arrow::before { opacity: .25; }
+th.amount .sort-btn { flex-direction: row-reverse; }
 td.amount { text-align: right; white-space: nowrap; }
 th.amount { text-align: right; }
 tr.in td.amount { color: var(--in); }
@@ -365,7 +378,11 @@ tr.is-pending .desc::after { content: " · pendente"; color: var(--warn); font-w
       <div class="table-wrap">
         <table>
           <thead><tr>
-            <th>Data</th><th>Descrição</th><th class="hide-sm">Categoria</th><th class="amount">Valor</th><th></th>
+            <th aria-sort="none"><button type="button" class="sort-btn" data-sort="date">Data<span class="arrow" aria-hidden="true"></span></button></th>
+            <th aria-sort="none"><button type="button" class="sort-btn" data-sort="desc">Descrição<span class="arrow" aria-hidden="true"></span></button></th>
+            <th class="hide-sm" aria-sort="none"><button type="button" class="sort-btn" data-sort="cat">Categoria<span class="arrow" aria-hidden="true"></span></button></th>
+            <th class="amount" aria-sort="none"><button type="button" class="sort-btn" data-sort="amount">Valor<span class="arrow" aria-hidden="true"></span></button></th>
+            <th></th>
           </tr></thead>
           <tbody id="rows"></tbody>
         </table>
@@ -707,6 +724,39 @@ tr.is-pending .desc::after { content: " · pendente"; color: var(--warn); font-w
 
   // ---- lista ----
   ['q', 'flt-type', 'flt-cat'].forEach(id => $(id).addEventListener('input', renderRows));
+
+  // ---- ordenação ----
+  const SORT_KEY = 'gastos-mensais:ordem';
+  const SORT_LABEL = { date: 'data', desc: 'descrição', cat: 'categoria', amount: 'valor' };
+  let sort = { key: 'date', dir: 'desc' };
+  try { const s = JSON.parse(localStorage.getItem(SORT_KEY)); if (s && SORT_LABEL[s.key] && /^(asc|desc)$/.test(s.dir)) sort = s; } catch (e) {}
+  const collator = new Intl.Collator('pt-BR', { sensitivity: 'base', numeric: true });
+  function compare(a, b) {
+    let r;
+    if (sort.key === 'amount') r = a.amount - b.amount;
+    else if (sort.key === 'date') r = a.date < b.date ? -1 : a.date > b.date ? 1 : 0;
+    else r = collator.compare(a[sort.key] || '', b[sort.key] || '');
+    if (r === 0 && sort.key !== 'date') r = a.date < b.date ? 1 : a.date > b.date ? -1 : 0;
+    return sort.dir === 'asc' ? r : -r;
+  }
+  function paintSort() {
+    document.querySelectorAll('.sort-btn').forEach(b => {
+      const on = b.dataset.sort === sort.key;
+      b.classList.toggle('active', on);
+      b.classList.toggle('asc', on && sort.dir === 'asc');
+      b.classList.toggle('desc', on && sort.dir === 'desc');
+      b.parentElement.setAttribute('aria-sort', on ? (sort.dir === 'asc' ? 'ascending' : 'descending') : 'none');
+      b.title = 'Ordenar por ' + SORT_LABEL[b.dataset.sort] +
+        (on ? (sort.dir === 'asc' ? ' (crescente, clique para decrescente)' : ' (decrescente, clique para crescente)') : '');
+    });
+  }
+  document.querySelector('thead').addEventListener('click', e => {
+    const b = e.target.closest('.sort-btn'); if (!b) return;
+    const key = b.dataset.sort;
+    sort = sort.key === key ? { key, dir: sort.dir === 'asc' ? 'desc' : 'asc' } : { key, dir: 'asc' };
+    try { localStorage.setItem(SORT_KEY, JSON.stringify(sort)); } catch (e) {}
+    renderRows();
+  });
   $('pend-card').onclick = () => {
     const f = $('flt-type');
     f.value = f.value === 'pending' ? '' : 'pending';
@@ -753,7 +803,9 @@ tr.is-pending .desc::after { content: " · pendente"; color: var(--warn); font-w
     const all = monthItems();
     const list = all.filter(it =>
       (!ft || (ft === 'pending' ? it.status === 'pending' : it.type === ft)) && (!fc || it.cat === fc) &&
-      (!q || it.desc.toLowerCase().includes(q) || (it.notes || '').toLowerCase().includes(q)));
+      (!q || it.desc.toLowerCase().includes(q) || (it.notes || '').toLowerCase().includes(q)))
+      .sort(compare);
+    paintSort();
     $('rows').innerHTML = list.map(it => {
       const p = parts(it.date);
       const sign = it.type === 'in' ? '+' : '−';
