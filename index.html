@@ -4,6 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Gastos Mensais</title>
+<script>
+  // Aplica o tema salvo antes de desenhar a página, para não piscar.
+  try { var t = localStorage.getItem('gastos-mensais:tema'); if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t); } catch (e) {}
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
@@ -222,6 +226,21 @@ tr.in .actions button.pay-btn { background: var(--recv-strong); color: #04263a; 
 .data-tools { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: space-between; }
 .data-tools .btns { display: flex; flex-wrap: wrap; gap: 8px; }
 .toast { position: fixed; left: 50%; bottom: 20px; transform: translateX(-50%); background: var(--ink); color: var(--bg); padding: 9px 16px; border-radius: 12px; font-size: .9rem; max-width: calc(100% - 32px); }
+.theme-btn {
+  position: fixed; right: 16px; bottom: calc(16px + env(safe-area-inset-bottom, 0px)); z-index: 10;
+  width: 46px; height: 46px; padding: 0; border-radius: 50%; display: grid; place-items: center;
+  background: var(--surface); color: var(--ink); border: 1px solid var(--line); box-shadow: var(--shadow);
+  -webkit-backdrop-filter: blur(20px) saturate(150%); backdrop-filter: blur(20px) saturate(150%);
+}
+.theme-btn svg { width: 21px; height: 21px; }
+.theme-btn .moon { display: none; }
+:root[data-theme="dark"] .theme-btn .sun { display: none; }
+:root[data-theme="dark"] .theme-btn .moon { display: block; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .theme-btn .sun { display: none; }
+  :root:not([data-theme="light"]) .theme-btn .moon { display: block; }
+}
+@media (max-width: 560px) { .wrap { padding-bottom: 56px; } }
 
 /* Login */
 .auth { min-height: calc(100vh - 72px); display: grid; place-items: center; }
@@ -441,6 +460,30 @@ tr.in .actions button.pay-btn { background: var(--recv-strong); color: #04263a; 
 </div>
 
 <div class="toast" id="toast" role="status" hidden></div>
+
+<button type="button" class="theme-btn" id="theme-btn" aria-label="Alternar tema claro/escuro" title="Alternar tema claro/escuro">
+  <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/></svg>
+  <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg>
+</button>
+<script>
+  (function () {
+    const root = document.documentElement, btn = document.getElementById('theme-btn');
+    const sysDark = window.matchMedia('(prefers-color-scheme: dark)');
+    const current = () => root.getAttribute('data-theme') || (sysDark.matches ? 'dark' : 'light');
+    function label() {
+      const next = current() === 'dark' ? 'claro' : 'escuro';
+      btn.title = 'Mudar para o tema ' + next; btn.setAttribute('aria-label', btn.title);
+    }
+    btn.onclick = () => {
+      const next = current() === 'dark' ? 'light' : 'dark';
+      root.setAttribute('data-theme', next);
+      try { localStorage.setItem('gastos-mensais:tema', next); } catch (e) {}
+      label();
+    };
+    sysDark.addEventListener('change', label);
+    label();
+  })();
+</script>
 
 <script src="config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
