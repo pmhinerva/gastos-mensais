@@ -28,6 +28,7 @@
   --recv: #0369a1;
   --recv-strong: #38bdf8;
   --recv-soft: rgba(56, 189, 248, .17);
+  --pattern: rgba(15, 42, 60, .085);
   --blob1: #5eead4;
   --blob2: #fda4af;
   --blob3: #a5b4fc;
@@ -44,7 +45,7 @@
     --accent: #2dd4bf; --accent-soft: rgba(45, 212, 191, .15); --on-accent: #042321;
     --in: #34d399; --in-soft: rgba(52, 211, 153, .15); --out: #fb7185; --out-soft: rgba(251, 113, 133, .15);
     --warn: #fbbf24; --warn-strong: #f59e0b; --warn-soft: rgba(251, 191, 36, .16);
-    --recv: #7dd3fc; --recv-strong: #38bdf8; --recv-soft: rgba(56, 189, 248, .15);
+    --recv: #7dd3fc; --recv-strong: #38bdf8; --recv-soft: rgba(56, 189, 248, .15); --pattern: rgba(226, 240, 255, .075);
     --blob1: #0f766e; --blob2: #9f1239; --blob3: #3730a3; --shadow: 0 8px 30px rgba(0, 0, 0, .35);
     color-scheme: dark;
   }
@@ -55,7 +56,7 @@
   --accent: #2dd4bf; --accent-soft: rgba(45, 212, 191, .15); --on-accent: #042321;
   --in: #34d399; --in-soft: rgba(52, 211, 153, .15); --out: #fb7185; --out-soft: rgba(251, 113, 133, .15);
   --warn: #fbbf24; --warn-strong: #f59e0b; --warn-soft: rgba(251, 191, 36, .16);
-    --recv: #7dd3fc; --recv-strong: #38bdf8; --recv-soft: rgba(56, 189, 248, .15);
+    --recv: #7dd3fc; --recv-strong: #38bdf8; --recv-soft: rgba(56, 189, 248, .15); --pattern: rgba(226, 240, 255, .075);
   --blob1: #0f766e; --blob2: #9f1239; --blob3: #3730a3; --shadow: 0 8px 30px rgba(0, 0, 0, .35);
   color-scheme: dark;
 }
@@ -72,6 +73,14 @@ body {
 .backdrop i:nth-child(1) { width: 46vw; height: 46vw; background: var(--blob1); top: -12vw; left: -10vw; }
 .backdrop i:nth-child(2) { width: 38vw; height: 38vw; background: var(--blob2); top: 30vh; right: -12vw; }
 .backdrop i:nth-child(3) { width: 40vw; height: 40vw; background: var(--blob3); bottom: -16vw; left: 25vw; }
+/* Estampa de ícones financeiros (moedas, gráficos, recibo, carteira, R$) sobre as manchas */
+.backdrop::after {
+  content: ""; position: absolute; inset: -20%;
+  background: var(--pattern);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='440' height='440' viewBox='0 0 440 440' fill='none' stroke='%23000' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cellipse cx='66' cy='48' rx='32' ry='10'/%3E%3Cpath d='M34 48v12c0 5.5 14.3 10 32 10s32-4.5 32-10V48M34 60v12c0 5.5 14.3 10 32 10s32-4.5 32-10V60M34 72v12c0 5.5 14.3 10 32 10s32-4.5 32-10V72'/%3E%3Cpath d='M172 36v92h132'/%3E%3Cpath d='M182 114l28-22 25 12 30-36 29-20'/%3E%3Cpath d='M282 47h13v13'/%3E%3Ccircle cx='210' cy='92' r='3.5'/%3E%3Ccircle cx='235' cy='104' r='3.5'/%3E%3Ccircle cx='265' cy='68' r='3.5'/%3E%3Cpath d='M342 22h52v94l-8-6-9 6-9-6-9 6-9-6-8 6z'/%3E%3Cpath d='M352 42h32M352 55h32M352 68h20M352 90h32'/%3E%3Ctext x='40' y='226' font-family='Arial, sans-serif' font-size='46' font-weight='700' fill='%23000' stroke='none'%3ER$%3C/text%3E%3Crect x='160' y='176' width='104' height='66' rx='11'/%3E%3Cpath d='M160 192c0-8 6-14 14-14h70'/%3E%3Crect x='226' y='198' width='38' height='24' rx='7'/%3E%3Ccircle cx='239' cy='210' r='3'/%3E%3Ccircle cx='326' cy='182' r='9'/%3E%3Ccircle cx='370' cy='226' r='9'/%3E%3Cpath d='M372 174l-48 60'/%3E%3Crect x='40' y='304' width='80' height='70' rx='9'/%3E%3Cpath d='M40 324h80M60 294v18M100 294v18'/%3E%3Cpath d='M58 342h8M76 342h8M94 342h8M58 358h8M76 358h8'/%3E%3Cpath d='M168 400h112'/%3E%3Crect x='176' y='362' width='16' height='38' rx='3'/%3E%3Crect x='200' y='340' width='16' height='60' rx='3'/%3E%3Crect x='224' y='316' width='16' height='84' rx='3'/%3E%3Crect x='248' y='346' width='16' height='54' rx='3'/%3E%3Ccircle cx='352' cy='344' r='32'/%3E%3Ccircle cx='352' cy='344' r='24'/%3E%3Ctext x='352' y='356' text-anchor='middle' font-family='Arial, sans-serif' font-size='32' font-weight='700' fill='%23000' stroke='none'%3E$%3C/text%3E%3Cpath d='M140 146h12M146 140v12M410 150h10M415 145v10M130 290h10M135 285v10M300 280h10M305 275v10M18 260h10M23 255v10M405 410h10M410 405v10'/%3E%3C/svg%3E") 0 0 / 440px 440px repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='440' height='440' viewBox='0 0 440 440' fill='none' stroke='%23000' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cellipse cx='66' cy='48' rx='32' ry='10'/%3E%3Cpath d='M34 48v12c0 5.5 14.3 10 32 10s32-4.5 32-10V48M34 60v12c0 5.5 14.3 10 32 10s32-4.5 32-10V60M34 72v12c0 5.5 14.3 10 32 10s32-4.5 32-10V72'/%3E%3Cpath d='M172 36v92h132'/%3E%3Cpath d='M182 114l28-22 25 12 30-36 29-20'/%3E%3Cpath d='M282 47h13v13'/%3E%3Ccircle cx='210' cy='92' r='3.5'/%3E%3Ccircle cx='235' cy='104' r='3.5'/%3E%3Ccircle cx='265' cy='68' r='3.5'/%3E%3Cpath d='M342 22h52v94l-8-6-9 6-9-6-9 6-9-6-8 6z'/%3E%3Cpath d='M352 42h32M352 55h32M352 68h20M352 90h32'/%3E%3Ctext x='40' y='226' font-family='Arial, sans-serif' font-size='46' font-weight='700' fill='%23000' stroke='none'%3ER$%3C/text%3E%3Crect x='160' y='176' width='104' height='66' rx='11'/%3E%3Cpath d='M160 192c0-8 6-14 14-14h70'/%3E%3Crect x='226' y='198' width='38' height='24' rx='7'/%3E%3Ccircle cx='239' cy='210' r='3'/%3E%3Ccircle cx='326' cy='182' r='9'/%3E%3Ccircle cx='370' cy='226' r='9'/%3E%3Cpath d='M372 174l-48 60'/%3E%3Crect x='40' y='304' width='80' height='70' rx='9'/%3E%3Cpath d='M40 324h80M60 294v18M100 294v18'/%3E%3Cpath d='M58 342h8M76 342h8M94 342h8M58 358h8M76 358h8'/%3E%3Cpath d='M168 400h112'/%3E%3Crect x='176' y='362' width='16' height='38' rx='3'/%3E%3Crect x='200' y='340' width='16' height='60' rx='3'/%3E%3Crect x='224' y='316' width='16' height='84' rx='3'/%3E%3Crect x='248' y='346' width='16' height='54' rx='3'/%3E%3Ccircle cx='352' cy='344' r='32'/%3E%3Ccircle cx='352' cy='344' r='24'/%3E%3Ctext x='352' y='356' text-anchor='middle' font-family='Arial, sans-serif' font-size='32' font-weight='700' fill='%23000' stroke='none'%3E$%3C/text%3E%3Cpath d='M140 146h12M146 140v12M410 150h10M415 145v10M130 290h10M135 285v10M300 280h10M305 275v10M18 260h10M23 255v10M405 410h10M410 405v10'/%3E%3C/svg%3E") 0 0 / 440px 440px repeat;
+  transform: rotate(-8deg);
+}
 .glass, .stat, .panel {
   background: var(--surface);
   -webkit-backdrop-filter: blur(20px) saturate(150%);
